@@ -1,6 +1,5 @@
 use semver::Version;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 
 /// A software package with metadata
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -212,59 +211,73 @@ impl Default for VulnerabilityConfig {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct SourcesConfig {
-    pub registries: HashMap<String, RegistryConfig>,
-    pub default_registry: Option<String>,
+pub struct SourceConfig {
+    pub enabled: bool,
+    pub mirror: Option<String>,
+    pub priority: i32,
 }
 
-impl Default for SourcesConfig {
+impl Default for SourceConfig {
     fn default() -> Self {
         Self {
-            registries: HashMap::new(),
-            default_registry: None,
+            enabled: true,
+            mirror: None,
+            priority: 0,
         }
     }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct RegistryConfig {
-    pub url: String,
-    pub token: Option<String>,
-    pub priority: i32,
+pub struct SourcesConfig {
+    pub homebrew: SourceConfig,
+    pub macports: SourceConfig,
+    pub nixpkgs: SourceConfig,
+    pub github: SourceConfig,
+}
+
+impl Default for SourcesConfig {
+    fn default() -> Self {
+        Self {
+            homebrew: SourceConfig { enabled: true, mirror: None, priority: 100 },
+            macports: SourceConfig { enabled: true, mirror: None, priority: 80 },
+            nixpkgs: SourceConfig { enabled: true, mirror: None, priority: 70 },
+            github: SourceConfig { enabled: true, mirror: None, priority: 90 },
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct WebConfig {
-    pub timeout_seconds: u64,
-    pub max_redirects: usize,
-    pub user_agent: String,
-    pub proxy: Option<String>,
+    pub port: u16,
+    pub host: String,
+    pub auto_open: bool,
+    pub tls: bool,
 }
 
 impl Default for WebConfig {
     fn default() -> Self {
         Self {
-            timeout_seconds: 30,
-            max_redirects: 10,
-            user_agent: format!("bbrew/{}", env!("CARGO_PKG_VERSION")),
-            proxy: None,
+            port: 8080,
+            host: "127.0.0.1".to_string(),
+            auto_open: false,
+            tls: false,
         }
     }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct CacheConfig {
-    pub directory: Option<String>,
-    pub max_size_mb: u64,
-    pub ttl_days: u32,
+    pub dir: Option<String>,
+    pub max_size_gb: u64,
+    pub prune_after_days: u32,
 }
 
 impl Default for CacheConfig {
     fn default() -> Self {
         Self {
-            directory: None,
-            max_size_mb: 500,
-            ttl_days: 30,
+            dir: None,
+            max_size_gb: 10,
+            prune_after_days: 30,
         }
     }
 }
