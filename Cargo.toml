@@ -1,0 +1,22 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/bbrew-core",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+rust-version = "1.75"
+
+[workspace.dependencies]
+semver = { version = "1.0", features = ["serde"] }
+serde = { version = "1.0", features = ["derive"] }
+toml = "0.8"
+thiserror = "1.0"
+anyhow = "1.0"
+chrono = { version = "0.4", features = ["serde"] }
+sha2 = "0.10"
+dirs = "5.0"
+reqwest = { version = "0.12", features = ["blocking"] }

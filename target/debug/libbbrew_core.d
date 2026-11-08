@@ -1,0 +1,1 @@
+/Users/wo/betterbrew/target/debug/libbbrew_core.rlib: /Users/wo/betterbrew/crates/bbrew-core/src/config.rs /Users/wo/betterbrew/crates/bbrew-core/src/error.rs /Users/wo/betterbrew/crates/bbrew-core/src/lib.rs /Users/wo/betterbrew/crates/bbrew-core/src/types.rs
