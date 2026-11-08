@@ -1,5 +1,4 @@
 use bbrew_core::types::*;
-use bbrew_core::error::BbrewError;
 use semver::Version;
 
 #[test]
