@@ -123,7 +123,7 @@ pub struct LockfileDependency {
 }
 
 /// Configuration for bbrew (global/user config)
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Config {
     pub install: InstallConfig,
     pub trust: TrustConfig,
@@ -149,75 +149,66 @@ impl Default for Config {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct InstallConfig {
     pub scope: InstallScope,
-    pub prefix: Option<String>,
-    pub link: bool,
-    pub verify_checksums: bool,
+    pub default_source: Option<String>,
+    pub prefer_binary: bool,
+    pub parallel_jobs: usize,
+    pub sandbox: bool,
 }
 
 impl Default for InstallConfig {
     fn default() -> Self {
         Self {
             scope: InstallScope::User,
-            prefix: None,
-            link: true,
-            verify_checksums: true,
+            default_source: None,
+            prefer_binary: true,
+            parallel_jobs: num_cpus::get(),
+            sandbox: false,
         }
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct TrustConfig {
-    pub threshold: TrustThreshold,
-    pub trusted_keys: Vec<String>,
-    pub allow_untrusted: bool,
+    pub threshold: u32,
+    pub min_success_rate: f64,
+    pub min_downloads: u64,
+    pub require_positive_reviews: bool,
+    pub cache_ttl_hours: u32,
 }
 
 impl Default for TrustConfig {
     fn default() -> Self {
         Self {
-            threshold: TrustThreshold::Signed,
-            trusted_keys: Vec::new(),
-            allow_untrusted: false,
-        }
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "lowercase")]
-pub enum TrustThreshold {
-    None,
-    Signed,
-    Verified,
-    Official,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct VulnerabilityConfig {
-    pub enabled: bool,
-    pub severity_threshold: SeverityThreshold,
-    pub advisory_db_url: Option<String>,
-    pub cache_ttl_hours: u32,
-}
-
-impl Default for VulnerabilityConfig {
-    fn default() -> Self {
-        Self {
-            enabled: true,
-            severity_threshold: SeverityThreshold::Medium,
-            advisory_db_url: None,
+            threshold: 70,
+            min_success_rate: 0.80,
+            min_downloads: 1000,
+            require_positive_reviews: true,
             cache_ttl_hours: 24,
         }
     }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "lowercase")]
-pub enum SeverityThreshold {
-    None,
-    Low,
-    Medium,
-    High,
-    Critical,
+pub struct VulnerabilityConfig {
+    pub auto_patch: bool,
+    pub warn_on_high: bool,
+    pub block_critical: bool,
+    pub scan_on_install: bool,
+    pub scan_on_update: bool,
+    pub db_update_interval_hours: u32,
+}
+
+impl Default for VulnerabilityConfig {
+    fn default() -> Self {
+        Self {
+            auto_patch: false,
+            warn_on_high: true,
+            block_critical: true,
+            scan_on_install: true,
+            scan_on_update: true,
+            db_update_interval_hours: 12,
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

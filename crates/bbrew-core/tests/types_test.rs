@@ -204,10 +204,10 @@ fn test_source_ref_serialization() {
 fn test_config_defaults() {
     let config = Config::default();
     assert_eq!(config.install.scope, InstallScope::User);
-    assert_eq!(config.trust.threshold, TrustThreshold::Signed);
-    assert_eq!(config.vulnerabilities.severity_threshold, SeverityThreshold::Medium);
-    assert!(config.web.timeout_seconds > 0);
-    assert_eq!(config.cache.max_size_mb, 500);
+    assert_eq!(config.trust.threshold, 70);
+    assert_eq!(config.vulnerabilities.db_update_interval_hours, 12);
+    assert!(config.web.port > 0);
+    assert_eq!(config.cache.max_size_gb, 10);
 }
 
 #[test]
