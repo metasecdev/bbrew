@@ -52,12 +52,12 @@ log_step() { echo -e "${CYAN}==>${RESET} ${BOLD}$*${RESET}" >&2; }
 spinner_pid=""
 start_spinner() {
     local msg="$1"
-    echo -n "${BLUE}==>${RESET} ${BOLD}${msg}${RESET} "
+    echo -n "${BLUE}==>${RESET} ${BOLD}${msg}${RESET} " >&2
     (
         local spin='⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'
         local i=0
         while true; do
-            printf "\r${BLUE}==>${RESET} ${BOLD}${msg}${RESET} ${spin:i++%${#spin}:1}"
+            printf "\r${BLUE}==>${RESET} ${BOLD}${msg}${RESET} ${spin:i++%${#spin}:1}" >&2
             sleep 0.1
         done
     ) &
@@ -68,7 +68,7 @@ stop_spinner() {
         kill "${spinner_pid}" 2>/dev/null || true
         wait "${spinner_pid}" 2>/dev/null || true
         spinner_pid=""
-        echo -ne "\r\033[K"
+        echo -ne "\r\033[K" >&2
     fi
 }
 
